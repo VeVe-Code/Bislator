@@ -12,7 +12,7 @@ import NewsForm from "../pages/admin/newsform.jsx";
 import Services from "../pages/services.jsx";
 import Dailynews from "../pages/Dailynews.jsx";
 import ContactUs from "../pages/Contactus.jsx";
-import AboutUs from "../pages/Aboutus.jsx";
+import AboutUs from "../pages/AboutUs.jsx";
 import AdminContactUs from "../pages/admin/admincontactus.jsx";
 import NewsDetail from "../pages/newsdetail.jsx";
 import AdminNewsDetail from "../pages/admin/adminnewsdetail.jsx";
@@ -67,3 +67,4 @@ export default function Index() {
     </AuthContextProvider>
   );
 }
+
