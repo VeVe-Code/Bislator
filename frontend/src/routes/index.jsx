@@ -12,7 +12,7 @@ import NewsForm from "../pages/admin/newsform.jsx";
 import Services from "../pages/services.jsx";
 import Dailynews from "../pages/Dailynews.jsx";
 import ContactUs from "../pages/Contactus.jsx";
-import AboutUs from "../pages/AboutUs.jsx";
+import Aboutus from "../pages/Aboutus.jsx";
 import AdminContactUs from "../pages/admin/admincontactus.jsx";
 import NewsDetail from "../pages/newsdetail.jsx";
 import AdminNewsDetail from "../pages/admin/adminnewsdetail.jsx";
@@ -35,7 +35,7 @@ function IndexRoutes() {
         { path: "/services", element: <Services /> },
         { path: "/Dailynews", element: <Dailynews /> },
         { path: "/Contact-us", element: <ContactUs /> },
-        { path: "/About-us", element: <AboutUs /> },
+        { path: "/About-us", element: <Aboutus /> },
         { path: "/Newsdetail/:id", element: <NewsDetail /> },
       ],
     },
@@ -67,4 +67,5 @@ export default function Index() {
     </AuthContextProvider>
   );
 }
+
 
