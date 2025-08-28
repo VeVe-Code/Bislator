@@ -11,7 +11,7 @@ import { AuthContext, AuthContextProvider } from "../contexts/AuthContext.jsx";
 import NewsForm from "../pages/admin/newsform.jsx";
 import Services from "../pages/services.jsx";
 import Dailynews from "../pages/Dailynews.jsx";
-import ContactUs from "../pages/Contactus.jsx";
+import Contactus from "../pages/Contactus.jsx";
 import Aboutus from "../pages/Aboutus.jsx";
 import AdminContactUs from "../pages/admin/admincontactus.jsx";
 import NewsDetail from "../pages/newsdetail.jsx";
@@ -34,7 +34,7 @@ function IndexRoutes() {
         { path: "/", element: <Home /> },
         { path: "/services", element: <Services /> },
         { path: "/Dailynews", element: <Dailynews /> },
-        { path: "/Contact-us", element: <ContactUs /> },
+        { path: "/Contact-us", element: <Contactus /> },
         { path: "/About-us", element: <Aboutus /> },
         { path: "/Newsdetail/:id", element: <NewsDetail /> },
       ],
@@ -67,5 +67,6 @@ export default function Index() {
     </AuthContextProvider>
   );
 }
+
 
 
