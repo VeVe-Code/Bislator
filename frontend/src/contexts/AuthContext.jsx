@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../helpers/axios";
 import { createContext, useEffect, useReducer } from "react";
 
 let AuthContext = createContext()
@@ -45,6 +45,7 @@ try{
     </AuthContext.Provider>
  )
 }
+
 
 
 export {AuthContext,AuthContextProvider}
