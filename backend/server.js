@@ -31,7 +31,7 @@ app.use(morgan('dev'))
 app.use(cookieParser())
 
 
-app.get('/services',(req,res)=>{
+app.get('/',(req,res)=>{
   return  res.json({msg:"hello"})
 })
 app.use(servicesRoute)
@@ -48,4 +48,5 @@ app.get('/set-cookie',(req,res)=>{
 app.get('/get-cookie',(req,res)=>{
    let cookies = req.cookies
   return  res.send(cookies)
+
 })
