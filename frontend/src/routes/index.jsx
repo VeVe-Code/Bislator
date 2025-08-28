@@ -4,15 +4,15 @@ import Home from "../pages/Home.jsx";
 import AdminLayout from "../adminlayouts.jsx";
 import AdminService from "../pages/admin/adminservices.jsx";
 import ServiceForm from "../pages/admin/serviceform.jsx";
-import RegisterForm from "../pages/admin/RegisterForm.jsx"; // fixed
+import RegisterForm from "../pages/admin/regitser.jsx";
 import LoginForm from "../pages/admin/login.jsx";
 import AdminNews from "../pages/admin/adminnews.jsx";
 import { AuthContext, AuthContextProvider } from "../contexts/AuthContext.jsx";
 import NewsForm from "../pages/admin/newsform.jsx";
 import Services from "../pages/services.jsx";
 import Dailynews from "../pages/Dailynews.jsx";
-import ContactUs from "../pages/ContactUs.jsx"; // fixed
-import AboutUs from "../pages/AboutUs.jsx";     // fixed
+import ContactUs from "../pages/Contactus.jsx";
+import Aboutus from "../pages/aboutus.jsx"
 import AdminContactUs from "../pages/admin/admincontactus.jsx";
 import NewsDetail from "../pages/newsdetail.jsx";
 import AdminNewsDetail from "../pages/admin/adminnewsdetail.jsx";
@@ -35,7 +35,7 @@ function IndexRoutes() {
         { path: "/services", element: <Services /> },
         { path: "/Dailynews", element: <Dailynews /> },
         { path: "/Contact-us", element: <ContactUs /> },
-        { path: "/About-us", element: <AboutUs /> },
+        { path: "/About-us", element: <Aboutus /> },
         { path: "/Newsdetail/:id", element: <NewsDetail /> },
       ],
     },
