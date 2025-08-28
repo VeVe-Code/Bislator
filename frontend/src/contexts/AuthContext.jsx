@@ -1,18 +1,21 @@
 import axios from "../helpers/axios";
 import { createContext, useEffect, useReducer } from "react";
 
-// Create context
+// 1️⃣ Create context
 let AuthContext = createContext();
 
-// Reducer to handle login/logout
+// 2️⃣ Reducer to handle login/logout
 let AuthReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
-      localStorage.setItem("admin", JSON.stringify(action.payload));
-      return { admin: action.payload };
+      // Store admin info in localStorage
+      localStorage.setItem("admin", JSON.stringify(action.payload.admin));
+      // Store token in localStorage
+      localStorage.setItem("token", action.payload.token);
+      return { admin: action.payload.admin };
     case "LOGOUT":
       localStorage.removeItem("admin");
-      localStorage.removeItem("token"); // remove token if stored
+      localStorage.removeItem("token");
       console.log("action hit logout");
       return { admin: null };
     default:
@@ -20,15 +23,14 @@ let AuthReducer = (state, action) => {
   }
 };
 
-// AuthContext Provider
+// 3️⃣ AuthContext provider
 let AuthContextProvider = ({ children }) => {
-  let [state, dispatch] = useReducer(AuthReducer, {
-    admin: null,
-  });
+  let [state, dispatch] = useReducer(AuthReducer, { admin: null });
 
+  // 4️⃣ Fetch admin info on mount
   useEffect(() => {
     const fetchAdmin = async () => {
-      const token = localStorage.getItem("token"); // get token from localStorage
+      const token = localStorage.getItem("token");
       if (!token) {
         dispatch({ type: "LOGOUT" });
         return;
@@ -36,24 +38,17 @@ let AuthContextProvider = ({ children }) => {
 
       try {
         const res = await axios.get("/api/admins/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const admin = res.data;
         if (admin) {
-          dispatch({ type: "LOGIN", payload: admin });
+          dispatch({ type: "LOGIN", payload: { admin, token } });
         } else {
           dispatch({ type: "LOGOUT" });
         }
       } catch (e) {
-        // Axios error handling
-        console.error(
-          "Failed to fetch admin:",
-          e.response?.data?.message || e.message
-        );
+        console.error("Failed to fetch admin:", e.response?.data || e.message);
         dispatch({ type: "LOGOUT" });
       }
     };
