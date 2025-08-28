@@ -4,16 +4,16 @@ import Home from "../pages/Home.jsx";
 import AdminLayout from "../adminlayouts.jsx";
 import AdminService from "../pages/admin/adminservices.jsx";
 import ServiceForm from "../pages/admin/serviceform.jsx";
-import RegisterForm from "../pages/admin/register.jsx";       
+import RegisterForm from "../pages/admin/RegisterForm.jsx"; // fixed
 import LoginForm from "../pages/admin/login.jsx";
 import AdminNews from "../pages/admin/adminnews.jsx";
 import { AuthContext, AuthContextProvider } from "../contexts/AuthContext.jsx";
 import NewsForm from "../pages/admin/newsform.jsx";
 import Services from "../pages/services.jsx";
-import Dailynews from "../pages/Dailynews.jsx";              
-import Contactus from "../pages/Contactus.jsx";             
-import Aboutus from "../pages/AboutUs.jsx";                  
-import AdminContactUs from "../pages/admin/admincontactus.jsx"; 
+import Dailynews from "../pages/Dailynews.jsx";
+import ContactUs from "../pages/ContactUs.jsx"; // fixed
+import AboutUs from "../pages/AboutUs.jsx";     // fixed
+import AdminContactUs from "../pages/admin/admincontactus.jsx";
 import NewsDetail from "../pages/newsdetail.jsx";
 import AdminNewsDetail from "../pages/admin/adminnewsdetail.jsx";
 
@@ -34,8 +34,8 @@ function IndexRoutes() {
         { path: "/", element: <Home /> },
         { path: "/services", element: <Services /> },
         { path: "/Dailynews", element: <Dailynews /> },
-        { path: "/Contact-us", element: <Contactus /> },
-        { path: "/About-us", element: <Aboutus /> },
+        { path: "/Contact-us", element: <ContactUs /> },
+        { path: "/About-us", element: <AboutUs /> },
         { path: "/Newsdetail/:id", element: <NewsDetail /> },
       ],
     },
@@ -43,46 +43,16 @@ function IndexRoutes() {
       path: "/admin",
       element: <AdminLayout />,
       children: [
-        {
-          path: "service",
-          element: admin ? <AdminService /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "service/create",
-          element: admin ? <ServiceForm /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "service/edit/:id",
-          element: admin ? <ServiceForm /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "register",
-          element: !admin ? <RegisterForm /> : <Navigate to="/admin/service" />,
-        },
-        {
-          path: "login",
-          element: !admin ? <LoginForm /> : <Navigate to="/admin/service" />,
-        },
-        {
-          path: "news",
-          element: admin ? <AdminNews /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "news/create",
-          element: admin ? <NewsForm /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "news/edit/:id",
-          element: admin ? <NewsForm /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "adminContactUs",
-          element: admin ? <AdminContactUs /> : <Navigate to="/admin/login" />,
-        },
-        {
-          path: "news/NewsDetails/:id",
-          element: admin ? <AdminNewsDetail /> : <Navigate to="/admin/login" />,
-        },
+        { path: "service", element: admin ? <AdminService /> : <Navigate to="/admin/login" /> },
+        { path: "service/create", element: admin ? <ServiceForm /> : <Navigate to="/admin/login" /> },
+        { path: "service/edit/:id", element: admin ? <ServiceForm /> : <Navigate to="/admin/login" /> },
+        { path: "register", element: !admin ? <RegisterForm /> : <Navigate to="/admin/service" /> },
+        { path: "login", element: !admin ? <LoginForm /> : <Navigate to="/admin/service" /> },
+        { path: "news", element: admin ? <AdminNews /> : <Navigate to="/admin/login" /> },
+        { path: "news/create", element: admin ? <NewsForm /> : <Navigate to="/admin/login" /> },
+        { path: "news/edit/:id", element: admin ? <NewsForm /> : <Navigate to="/admin/login" /> },
+        { path: "adminContactUs", element: admin ? <AdminContactUs /> : <Navigate to="/admin/login" /> },
+        { path: "news/NewsDetails/:id", element: admin ? <AdminNewsDetail /> : <Navigate to="/admin/login" /> },
       ],
     },
   ]);
