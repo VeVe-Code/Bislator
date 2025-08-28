@@ -21,7 +21,7 @@ mongoose.connect(mongoURL).then(()=>{
 })
 app.use(cors(
   {
-    origin:'http://localhost:5173',
+    origin:'https://bislator-frontend.onrender.com',
     credentials:true
   }
 ))//local development ---WaRNING
@@ -50,3 +50,4 @@ app.get('/get-cookie',(req,res)=>{
   return  res.send(cookies)
 
 })
+
