@@ -1,112 +1,129 @@
-const Service = require("../model/Service");
-let mongoose = require('mongoose') 
+const Service = require("../model/Service"); // ✅ Fixed import
+const { Op } = require("sequelize");
 
-let servicescontroller = {
-  index: async(req, res) => {
-    let limit = 6;
-    let page = req.query.page
-    console.log(page)
+let servicesController = {
+  // GET /api/services?page=1
+  index: async (req, res) => {
+  try {
+    // fallback: req.query.page undefined or NaN
+    let page = parseInt(req.query.page);
+    if (isNaN(page) || page < 1) page = 1;
 
-    let services = await Service.find().skip((page - 1)*limit).limit(limit).sort({createdAt:-1});
-    let totalservicescount = await Service.countDocuments()
-    let totalpagescount = Math.ceil(totalservicescount/limit)
-    console.log(totalpagescount)
-   
-     let links = {
-        nextPage : totalpagescount === page ? false: true,
-        previousPage : page === 1 ? false : true,
-        currentPage :page,
-        loopLink:[]}
+    const limit = 6;
 
-        for (let index = 0; index <totalpagescount; index++) {
-          let number =index+1
-       links.loopLink.push({number})
-          
-        }
-        console.log(links.previousPage)
+    const { count: totalServicesCount, rows: services } = await Service.findAndCountAll({
+      offset: (page - 1) * limit,
+      limit,
+      order: [["createdAt", "DESC"]],
+    });
 
-        let response ={
-          links,
-          data:services
-        }
-    return res.json(response);
+    const totalPagesCount = Math.ceil(totalServicesCount / limit);
+
+    let links = {
+      nextPage: totalPagesCount === page ? false : true,
+      previousPage: page === 1 ? false : true,
+      currentPage: page,
+      loopLink: [],
+    };
+
+    for (let i = 0; i < totalPagesCount; i++) {
+      links.loopLink.push({ number: i + 1 });
+    }
+
+    return res.json({ links, data: services });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Server error" });
+  }
+}
+,
+
+  // POST /api/services
+  store: async (req, res) => {
+    try {
+      const { title, about } = req.body;
+
+      const service = await Service.create({ title, about });
+
+      return res.status(200).json(service);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: "Server error" });
+    }
   },
-  store: async(req, res) => {
 
-    let {title,about}=req.body
-    let service = await Service.create({
-        title,
-        about
-    })
-    return res.json(service);
-    
+  // GET /api/services/:id
+  show: async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      const service = await Service.findByPk(id);
+
+      if (!service) {
+        return res.status(404).json({ msg: "Service not found" });
+      }
+
+      return res.json(service);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: "Server error" });
+    }
   },
-show: async (req, res) => {
+
+  // DELETE /api/services/:id
+
+
+
+    destroy: async (req, res) => {
   try {
     let id = req.params.id;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    // Optional: check if ID is a valid number (Sequelize usually uses numeric IDs)
+    if (isNaN(id)) {
       return res.status(400).json({ msg: "Invalid ID" });
     }
 
-    let service = await Service.findById(id);
+    // Find the service by primary key
+    let service = await Service.findByPk(id);
 
     if (!service) {
       return res.status(404).json({ msg: "Service not found" });
     }
 
-    return res.json(service);
+    // Delete the service
+    await service.destroy();
+
+    return res.json({ msg: "Service deleted successfully", service });
 
   } catch (e) {
-    console.error(e); // Optional: log the actual error
+    console.error(e);
     return res.status(500).json({ msg: "Server error" });
   }
-},
-  destroy: async(req, res) => {
-     try {
-    let id = req.params.id;
+}
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ msg: "Invalid ID" });
-    }
+,
 
-    let service = await Service.findByIdAndDelete(id);
 
-    if (!service) {
-      return res.status(404).json({ msg: "Service not found" });
-    }
-
-    return res.json(service);
-
-  } catch (e) {
-    console.error(e); // Optional: log the actual error
-    return res.status(500).json({ msg: "Server error" });
-  }
-  },
-  update: async(req, res) => {
+  // PATCH /api/services/:id
+  update: async (req, res) => {
     try {
-    let id = req.params.id;
+      const id = req.params.id;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ msg: "Invalid ID" });
+      const service = await Service.findByPk(id);
+
+      if (!service) {
+        return res.status(404).json({ msg: "Service not found" });
+      }
+
+      await service.update({ ...req.body });
+
+      return res.status(200).json(service);
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: "Server error" });
     }
-
-    let service = await Service.findByIdAndUpdate(id,{
-        ...req.body
-    });
-
-    if (!service) {
-      return res.status(404).json({ msg: "Service not found" });
-    }
-
-    return res.json(service);
-
-  } catch (e) {
-    console.error(e); // Optional: log the actual error
-    return res.status(500).json({ msg: "Server error" });
-  }
-  
   },
 };
 
-module.exports = servicescontroller;
+module.exports = servicesController;

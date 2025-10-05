@@ -9,24 +9,33 @@ let AdminController = {
 
   }
   ,
-    login :async (req,res)=>{
-try{
-     let {email,password} = req.body;
-   let admin = await Admin.login(email,password)
-    let token = createToken(admin._id)
-    res.cookie('jwt',token,{httpOnly : true, maxAge:  3 * 24 * 60 * 60 * 1000 })
-    return res.json({admin,token})
-  }catch(e){
-    return res.status(400).json({error : e.message })
+  login: async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const admin = await Admin.login(email, password);
+
+    const token = createToken(admin.id); // Sequelize uses `id`, not `_id`
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000
+    });
+
+    return res.json({
+      admin: { id: admin.id, name: admin.name, email: admin.email },
+      token
+    });
+  } catch (e) {
+    return res.status(400).json({ error: e.message });
   }
-    },
+},
+  
 
     register:async(req,res)=>{ 
    try{
      let {name,email,password} = req.body;
    let admin = await Admin.register(name,email,password)
    // create token 
-   let token = createToken(admin._id)
+   let token = createToken(admin.id)
     res.cookie('jwt',token,{httpOnly : true, maxAge:  3 * 24 * 60 * 60 * 1000 })
     return res.json({admin,token})
 }catch(e){

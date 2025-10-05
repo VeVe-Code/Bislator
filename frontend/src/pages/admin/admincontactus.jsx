@@ -28,8 +28,8 @@ function AdminContactus() {
   }, [search]);
 
 
-let Ondeleteed = (_id)=> {
- setData(prev => prev.filter( p => p._id !== _id))
+let Ondeleteed = (id)=> {
+ setData(prev => prev.filter( p => p.id !== id))
 } 
 
 
@@ -103,7 +103,7 @@ let Ondeleteed = (_id)=> {
 
         </div>
       ) :data.length > 0 ? (
-                data.map((d) => <Data d={d} key={d._id} OnDelete={Ondeleteed} />)
+                data.map((d) => <Data d={d} key={d.id} OnDelete={Ondeleteed} />)
               ) : (
                 <tr>
                   <td

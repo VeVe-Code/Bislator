@@ -64,7 +64,7 @@ function Services() {
             <div className="grid md:grid-cols-3 gap-8">
               {allservices.map((s, i) => (
                 <motion.div
-                  key={s._id}
+                  key={s.id}
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.2 }}

@@ -45,12 +45,12 @@ useEffect(() => {
   }
 }, [page, search]);
 
-let onDelete = (_id) => {
+let onDelete = (id) => {
     if(news.length === 1 && page > 1 ){
 
         naviagte('/admin/news/?page=' + (page - 1))
     }else{
-        setNews(prev => prev.filter(n => n._id !== _id))
+        setNews(prev => prev.filter(n => n.id !== id))
     }
     
 }
@@ -111,7 +111,7 @@ let onDelete = (_id) => {
         </div>
       ) :!!news.length ? (
                 news.map(n => (
-                <NewsCard n={n} key={n._id} onDelete={onDelete}/>
+                <NewsCard n={n} key={n.id} onDelete={onDelete}/>
                 ))
             ): <h1>no data</h1>}
            {!!links&& <Pagination links={links} page={page|| 1}/> }

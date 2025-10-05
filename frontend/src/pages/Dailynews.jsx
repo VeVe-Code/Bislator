@@ -99,7 +99,7 @@ function DailyNews() {
         // ✅ Data Section
         news.map((n) => (
           <motion.div
-            key={n._id}
+            key={n.id}
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
@@ -120,7 +120,7 @@ function DailyNews() {
                 </h3>
                 <p className="text-gray-800 text-md">{n.description}</p>
                 <Link
-                  to={`/Newsdetail/${n._id}`}
+                  to={`/Newsdetail/${n.id}`}
                   className="text-blue-500 hover:underline font-medium"
                 >
                   News Details

@@ -37,10 +37,10 @@ console.log(page)
         fetchServices()
     }, [page])
 
-    let onDeleted=(_id)=>{
+    let onDeleted=(id)=>{
         if(services.length ===1 && page > 1){
             navigate('/admin/service/?page='+(page-1))
-        }else{ setServices(prev => prev.filter(s=>s._id !==_id))}
+        }else{ setServices(prev => prev.filter(s=>s.id !==id))}
            
     }
     return (
@@ -64,7 +64,7 @@ console.log(page)
 
         </div>
       ) :!!services.length  ? (services.map(service => (
-                    <ServiceCard service={service} key={service._id} onDeleted={onDeleted}/>
+                    <ServiceCard service={service} key={service.id} onDeleted={onDeleted}/>
                 )) ) : <h1>no data</h1>}
 
             </div>

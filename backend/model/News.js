@@ -1,26 +1,33 @@
-let mongoose = require('mongoose')
+const { DataTypes, Model } = require("sequelize");
+const sequelize = require("../config/db"); // your MariaDB connection
 
-let Schema = mongoose.Schema
+class News extends Model {}
 
-
-let NewsSchema = new Schema ({
+News.init(
+  {
     title: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-      photo: {
-        type: String,
-        
+    photo: {
+      type: DataTypes.STRING,
+      allowNull: true, // optional
     },
-    description:{
-        type:String,
-        required:true
+    description: {
+      type: DataTypes.TEXT, // for longer text
+      allowNull: false,
     },
-    about:{
-        type:String,
-        required:true
-    }
-    
-},{timestamps:true})
+    about: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "News",
+    tableName: "news", // table name in MariaDB
+    timestamps: true, // createdAt & updatedAt
+  }
+);
 
-module.exports= mongoose.model("News", NewsSchema)
+module.exports = News;

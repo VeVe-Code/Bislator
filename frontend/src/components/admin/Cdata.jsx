@@ -5,10 +5,10 @@ import axios from "../../helpers/axios";
 function Cdata({ d, OnDelete}) {
   let DeleteData = async () => {
     try {
-      let res = await axios.delete("/api/contactus/" + d._id);
+      let res = await axios.delete("/api/contactus/" + d.id);
       if (res.status === 200) {
-        console.log("Deleted:", d._id);
-        OnDelete(d._id)
+        console.log("Deleted:", d.id);
+        OnDelete(d.id)
       }
     } catch (err) {
       console.error("Delete failed:", err);

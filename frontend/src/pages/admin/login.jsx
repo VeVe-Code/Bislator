@@ -21,7 +21,7 @@ let {dispatch}= useContext(AuthContext)
         password
     }
 let res = await axios.post('/api/admins/login/', data,{
-    withCredentials:true
+    withCredentials:true, timeout: 10000 
 });
 if(res.status===200){
   dispatch({type:"LOGIN", payload: res.data.admin})

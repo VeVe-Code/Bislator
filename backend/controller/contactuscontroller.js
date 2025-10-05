@@ -1,63 +1,71 @@
-
-// const Service = require("../model/Service");
-// let mongoose = require('mongoose') 
-
-let mongoose = require('mongoose');
+const { Op } = require("sequelize"); // <-- import this at the top
 const Contactus = require("../model/Contactus");
-const { JSDOM } = require('jsdom');
-const createDOMPurify = require('isomorphic-dompurify');
+const { JSDOM } = require("jsdom");
+const createDOMPurify = require("isomorphic-dompurify");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
-
 let ContactusController = {
-  index: async(req, res) => {
-     const name = req.query.name || ""; 
-    let data = await Contactus.find({
-     name: { $regex: name, $options: "i" }// case-insensitive partial match
-    }).sort({createdAt:-1});
-    return res.json(data);
+  index: async (req, res) => {
+    try {
+      const name = req.query.name || "";
+
+      const data = await Contactus.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${name}%` // <-- use Op.like
+          }
+        },
+        order: [["createdAt", "DESC"]]
+      });
+
+      return res.json(data);
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ msg: "Server error" });
+    }
   },
-  store: async(req, res) => {
-  
-  try { let {name,email,phno,msg}=req.body
-     const safeMsg = DOMPurify.sanitize(msg, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
-    let data = await Contactus.create({
+
+  store: async (req, res) => {
+    try {
+      let { name, email, phno, msg } = req.body;
+      const safeMsg = DOMPurify.sanitize(msg, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+
+      const data = await Contactus.create({
         name,
         email,
         phno,
-        msg,
-         msg: safeMsg       
-    })
-    return res.json(data);}catch(e){
-      return res.status(400).json({msg:"error message"})
+        msg: safeMsg
+      });
+
+      return res.json(data);
+    } catch (e) {
+      console.error(e);
+      return res.status(400).json({ msg: "Error creating contact" });
     }
-    
-  
+  },
 
-},
+  destroy: async (req, res) => {
+    try {
+      const { id } = req.params;
 
-destroy: async (req, res) => {
-  try {
-    let id = req.params.id;
+      const deleted = await Contactus.destroy({
+        where: { id }
+      });
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ msg: "Invalid ID" });
+      if (!deleted) return res.status(404).json({ msg: "Data not found" });
+
+      return res.json({ msg: "Contact deleted successfully" });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ msg: "Server error" });
     }
-
-    let data = await Contactus.findByIdAndDelete(id);
-
-    if (!data) {
-      return res.status(404).json({ msg: "data not found" });
-    }
-
-    return res.json({ msg: "Contactus deleted successfully", data });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ msg: "Server error" });
   }
-}
+};
+
+module.exports = ContactusController;
+
 
 
 //   destroy: async(req, res) => {
@@ -81,6 +89,3 @@ destroy: async (req, res) => {
 //     return res.status(500).json({ msg: "Server error" });
 //   }
 //   },
-}
-
-module.exports = ContactusController;

@@ -1,61 +1,48 @@
-let mongoose =require('mongoose')
-let bcrypt = require('bcrypt')
-let Schema = mongoose.Schema;
+const { DataTypes, Model } = require("sequelize");
+const sequelize = require("../config/db");
+const bcrypt = require("bcrypt");
 
+class Admin extends Model {
+  // Register new admin
+  static async register(name, email, password) {
+    const adminExists = await Admin.findOne({ where: { email } });
+    if (adminExists) throw new Error("Admin already exists");
 
-let AdminSchema = new Schema({
+    const hash = await bcrypt.hash(password.trim(), 10);
 
-    name:{
-        type:String,
-        requried:true
-    },
-    email:{
-        type:String,
-        requried:true,
-        unique:true
-    },
-    password:{
-        type:String,
-        require:true,
-    }
+    const admin = await Admin.create({
+      name,
+      email,
+      password: hash
+    });
 
-})
+    return admin;
+  }
 
-AdminSchema.statics.register = async function (name, email, password)  {
-      let adminExists = await this.findOne({email})
-    if(adminExists){
-        throw new Error('admin already exists')
-    }
-    let salt = await bcrypt.genSalt();
-    let hashValue = await bcrypt.hash(password,salt)
+  // Login admin
+  static async login(email, password) {
+    const admin = await Admin.findOne({ where: { email } });
+    if (!admin) throw new Error("Admin does not exist");
 
-    let admin = await this.create({
-        name,
-        email,
-        password: hashValue
-    }) 
- return admin
+    const isCorrect = await bcrypt.compare(password.trim(), admin.password);
+    if (!isCorrect) throw new Error("Password incorrect");
+
+    return admin;
+  }
 }
 
+Admin.init(
+  {
+    name: { type: DataTypes.STRING, allowNull: false },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    password: { type: DataTypes.STRING, allowNull: false },
+  },
+  {
+    sequelize,
+    modelName: "Admin",
+    tableName: "admins",
+    timestamps: true,
+  }
+);
 
-AdminSchema.statics.login = async function (email, password)  {
-      let admin = await this.findOne({email})
-    if(!admin){
-        throw new Error('admin deos not exists ')
-    }
- //compare password
- //user.password === password
-let isCorrect =await bcrypt.compare(password,admin.password)
-    if(isCorrect){
-        return admin
-    }else{
-        throw new Error('Password incorrect')
-    }
-
-
-  
- return admin
-}
-
-
-module.exports= mongoose.model('Admin',AdminSchema)
+module.exports = Admin;

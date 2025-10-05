@@ -16,7 +16,7 @@ router.post('/logout',AdminController.logout)
 router.post('/register', [
          body('name').notEmpty(),
               body('email').custom(async value => {
-    const admin = await Admin.findOne({email:value});
+const admin = await Admin.findOne({ where: { email: value } });
     if (admin) {
       throw new Error('E-mail already in use');
     }

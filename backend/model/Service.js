@@ -1,18 +1,18 @@
-let mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db'); // adjust path to your sequelize instance
 
-let Schema = mongoose.Schema;
-
-let ServiceSchema = new Schema({
+const Service = sequelize.define('Service', {
     title: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
     },
     about: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    tableName: 'services' // optional: explicitly name the table
 });
 
-module.exports = mongoose.model("Service", ServiceSchema);
+module.exports = Service;
